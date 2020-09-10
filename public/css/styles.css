@@ -5,10 +5,30 @@ body{
 }
 .text-door{
     transform: rotate(-90deg);
-    width: 10%
+    width: 10%;
+    border-bottom: 2px solid black;
 }
 .space-item{
-    width: 20px;
-    height: 20px;
-    border: 1px solid #F8F8F8;
+    width: 50px;
+    height: 40px;
+    margin: 1px;
+    max-width: 50px;
+    align-items: center;
+    display: flex;
+    color: white;
+    font-weight: bold;
+    border: 0;
+    background-color: #ef2b2bc4;
+}
+.space-item-free{
+    background-color: #2cda2c;
+}
+.modal{
+    background: #ffffffbd;
+}
+.item-vehicle-to-client{
+    box-shadow: 0 6px 12px -4px #d6d6d6;
+    border-radius: 7px;
+    padding: 20px;
+    margin-bottom: 10px;
 }
