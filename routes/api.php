@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\TypeVehiclesController;
+use App\Http\Controllers\ParkingLotController;
+use App\Http\Controllers\ClientsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,5 +26,24 @@ Route::group([
     Route::get('/vehicles', [TypeVehiclesController::class, 'getAll']);
     Route::post('/vehicles', [TypeVehiclesController::class, 'store']);
     Route::post('/vehicles/destroy', [TypeVehiclesController::class, 'destory']);
+
+});
+
+// rutas para parquedero y acciones
+Route::group([
+    'prefix' => 'parking-lot'
+], function() {
+
+    Route::post('/space/change-state', [ParkingLotController::class, 'changeStateSpaceToParkingLot']);
+
+});
+
+// rutas para clientes
+Route::group([
+    'prefix' => 'clients'
+], function() {
+
+    Route::post('/', [ClientsController::class, 'store']);
+    Route::get('/', [ClientsController::class, 'getAll']);
 
 });
