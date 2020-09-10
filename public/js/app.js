@@ -71038,7 +71038,11 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
     className: "btn btn-sm btn-info ml-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "fa fa-plus text-white"
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: ""
+  }, "Vehiculo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "d-flex justify-content-start align-items-center mt-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     className: "form-control",
@@ -71307,6 +71311,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _services_Axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/Axios */ "./resources/js/services/Axios.js");
 /* harmony import */ var _components_Loading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Loading */ "./resources/js/components/Loading.js");
+/* harmony import */ var _Vehicles_New__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Vehicles/New */ "./resources/js/views/Clients/Vehicles/New.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -71325,6 +71330,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var History = function History(props) {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -71336,27 +71342,138 @@ var History = function History(props) {
       clients = _useState4[0],
       setclients = _useState4[1];
 
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('hide'),
+      _useState6 = _slicedToArray(_useState5, 2),
+      modalNewVehicule = _useState6[0],
+      setModalNewVehicule = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState8 = _slicedToArray(_useState7, 2),
+      typeVechicles = _useState8[0],
+      setTypeVechicles = _useState8[1];
+
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+      _useState10 = _slicedToArray(_useState9, 2),
+      clientActived = _useState10[0],
+      setclientActived = _useState10[1];
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     setloading(true);
-    Object(_services_Axios__WEBPACK_IMPORTED_MODULE_1__["AxiosGET"])('clients', callbackLoadClients);
+    loadClients();
+    Object(_services_Axios__WEBPACK_IMPORTED_MODULE_1__["AxiosGET"])('settings/vehicles', callbackLoadTypeVehicles);
   }, []); // cargar clientes
+
+  var loadClients = function loadClients() {
+    Object(_services_Axios__WEBPACK_IMPORTED_MODULE_1__["AxiosGET"])('clients', callbackLoadClients);
+  };
 
   var callbackLoadClients = function callbackLoadClients(status, response) {
     if (status === 200) setclients(response.clients);
     if (status === 1000) setloading(false);
+  }; // cargar tipos de vahiculos
+
+
+  var callbackLoadTypeVehicles = function callbackLoadTypeVehicles(status, response) {
+    if (status === 200) setTypeVechicles(response.types);
+    if (status === 1000) setloading(false);
+  }; // eliminar vehiculos de un cliente
+
+
+  var deleteVehicleClient = function deleteVehicleClient(vehicle) {
+    var cDelete = confirm("\xBFseguro que deseas elimar el Vehiculo con placas/serial ".concat(vehicle.code, "?"));
+    if (!cDelete) return false;
+    setloading(true);
+    Object(_services_Axios__WEBPACK_IMPORTED_MODULE_1__["AxiosPOST"])('clients/vehicles/destroy', {
+      id: vehicle.id
+    }, callbackDeleteVehicleClient);
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, loading && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loading__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  var callbackDeleteVehicleClient = function callbackDeleteVehicleClient(status, response) {
+    if (status === 200) {
+      if (response.status === 200) {
+        loadClients();
+      } else if (response.status === 460) {
+        alert("El Vehiculo esta presentando problemas");
+      } else if (response.status === 200) {
+        alert("El Vehiculo ya ha sido usado para funciones del sistema.\n\nNo es posible eliminar.");
+      }
+    }
+
+    if (status === 1000) setloading(false);
+  }; // eliminar  un cliente
+
+
+  var deleteClient = function deleteClient(_cli) {
+    var cDelete = confirm("\xBFseguro que deseas elimar Cliente ".concat(_cli.name, "?"));
+    if (!cDelete) return false;
+    setloading(true);
+    Object(_services_Axios__WEBPACK_IMPORTED_MODULE_1__["AxiosPOST"])('clients/destroy', {
+      id: _cli.id
+    }, callbackDeleteClient);
+  };
+
+  var callbackDeleteClient = function callbackDeleteClient(status, response) {
+    if (status === 200) {
+      if (response.status === 200) {
+        loadClients();
+      } else if (response.status === 460) {
+        alert("El Cliente esta presentando problemas");
+      } else if (response.status === 200) {
+        alert("El Cliente ya ha sido usado para funciones del sistema.\n\nNo es posible eliminar.");
+      }
+    }
+
+    if (status === 1000) setloading(false);
+  };
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, loading && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loading__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Vehicles_New__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    setModalNewVehicule: setModalNewVehicule,
+    modalNewVehicule: modalNewVehicule,
+    typeVechicles: typeVechicles,
+    clientActived: clientActived
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row"
   }, clients.map(function (x) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-12 item-vehicle-to-client"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Nombre: ", x.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "N\xFAmero de identificaci\xF3n: ", x.number), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Vehiculos:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
-      className: "table table-hover"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "d-flex justify-content-start align-items-center"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: "btn btn-sm btn-danger text-white mr-2",
+      onClick: function onClick() {
+        return deleteClient(x);
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "fa fa-trash text-white"
+    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      style: {
+        width: '90%'
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Nombre: ", x.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "N\xFAmero de identificaci\xF3n: ", x.number))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "d-flex justify-content-between align-items-center"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Vehiculos:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: "btn btn-sm btn-info text-white",
+      onClick: function onClick() {
+        setModalNewVehicule('show');
+        setclientActived(x.id);
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "fa fa-plus text-white mr-1"
+    }), "Nuevo vehiculo", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "fa fa-car text-white ml-1"
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      className: "table table-hover mt-2"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "#"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Place/Serial"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Tipo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Acciones"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, x.vehicles.length > 0 ? x.vehicles.map(function (v) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
         key: v.id
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, v.id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, v.code), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, v.type), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, v.id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, v.code), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, v.type), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-sm btn-danger",
+        onClick: function onClick() {
+          return deleteVehicleClient(v);
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        className: "fa fa-trash text-white"
+      }))));
     }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
       colSpan: "4"
     }, "No tiene vehiculos")))));
@@ -71476,6 +71593,156 @@ var New = function New(props) {
   }, creating, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "fa fa-send ml-2 text-white"
   })))));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (New);
+
+/***/ }),
+
+/***/ "./resources/js/views/Clients/Vehicles/New.js":
+/*!****************************************************!*\
+  !*** ./resources/js/views/Clients/Vehicles/New.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _services_Axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../services/Axios */ "./resources/js/services/Axios.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+var New = function New(props) {
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('Crear Vehiculo'),
+      _useState2 = _slicedToArray(_useState, 2),
+      creating = _useState2[0],
+      setCreating = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState4 = _slicedToArray(_useState3, 2),
+      type = _useState4[0],
+      setType = _useState4[1];
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState6 = _slicedToArray(_useState5, 2),
+      code = _useState6[0],
+      setCode = _useState6[1]; // crear tipo
+
+
+  var create = function create(e) {
+    e.preventDefault();
+    setCreating("Creando vehiculo, espera...");
+    Object(_services_Axios__WEBPACK_IMPORTED_MODULE_1__["AxiosPOST"])('clients/vehicles', {
+      type: type,
+      code: code,
+      idClient: props.clientActived
+    }, callbackCreate);
+  };
+
+  var callbackCreate = function callbackCreate(status, response) {
+    if (status === 200) {
+      window.location.reload();
+      alert("Vehiculo creado con exito.");
+    }
+
+    if (status === 1000) setCreating('Crear Vehiculo');
+  };
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal fade ".concat(props.modalNewVehicule),
+    style: props.modalNewVehicule === 'show' ? {
+      display: 'flex'
+    } : {
+      display: 'none'
+    },
+    id: "staticBackdrop",
+    "data-backdrop": "static",
+    "data-keyboard": "false",
+    tabIndex: "-1",
+    "aria-labelledby": "staticBackdropLabel",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-dialog w-100"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-content"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-header"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
+    className: "modal-title",
+    id: "staticBackdropLabel"
+  }, "Agregar Vehiculo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "button",
+    onClick: function onClick() {
+      return props.setModalNewVehicule('hide');
+    },
+    className: "close",
+    "data-dismiss": "modal",
+    "aria-label": "Close"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    "aria-hidden": "true"
+  }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-body"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+    onSubmit: function onSubmit(e) {
+      return create(e);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: ""
+  }, "Tipo de Vehiculo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+    className: "form-control",
+    required: true,
+    value: type,
+    onChange: function onChange(text) {
+      return setType(text.target.value);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+    value: ""
+  }, "..."), props.typeVechicles.map(function (x) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      key: x.id,
+      value: x.id
+    }, x.type);
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: ""
+  }, "Placa o Serial del Vehiculo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    type: "text",
+    required: true,
+    className: "form-control",
+    value: code,
+    onChange: function onChange(text) {
+      return setCode(text.target.value);
+    }
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-footer"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "button",
+    className: "btn btn-sm btn-light",
+    "data-dismiss": "modal",
+    onClick: function onClick() {
+      return props.setModalNewVehicule('hide');
+    }
+  }, "Cancelar"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "submit",
+    className: "btn btn-sm btn-info text-white"
+  }, creating)))))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (New);

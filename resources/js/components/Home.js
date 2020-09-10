@@ -181,7 +181,11 @@ const ModalActiosToSpacesParkingLot = props => {
                                     <span className="fa fa-plus text-white" />
                                 </button>
                             </div>
+                        </div>
 
+                        <div className="form-group">
+                            <label htmlFor="">Vehiculo</label>
+                            <br/>
                             <div className="d-flex justify-content-start align-items-center mt-2">
                                 <select className="form-control" value={veichle} onChange={text => setVeichle(text.target.value)}>
                                     <option value="">...</option>
@@ -193,8 +197,8 @@ const ModalActiosToSpacesParkingLot = props => {
                                     <span className="fa fa-plus text-white" />
                                 </button>
                             </div>
-
                         </div>
+
 
                     </div>
                     <div className="modal-footer">
