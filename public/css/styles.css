@@ -1,0 +1,14 @@
+body{
+    background-color: white;
+    font-family: "Nunito", sans-serif;
+    font-size: 12px;
+}
+.text-door{
+    transform: rotate(-90deg);
+    width: 10%
+}
+.space-item{
+    width: 20px;
+    height: 20px;
+    border: 1px solid #F8F8F8;
+}
