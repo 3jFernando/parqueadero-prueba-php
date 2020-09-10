@@ -45,5 +45,8 @@ Route::group([
 
     Route::post('/', [ClientsController::class, 'store']);
     Route::get('/', [ClientsController::class, 'getAll']);
+    Route::post('/destroy', [ClientsController::class, 'destroyClient']);
+    Route::post('/vehicles', [ClientsController::class, 'storeVehicle']);
+    Route::post('/vehicles/destroy', [ClientsController::class, 'destroyVehicle']);
 
 });

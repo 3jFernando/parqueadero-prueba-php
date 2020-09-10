@@ -54,4 +54,67 @@ class ClientsController extends Controller
             return response()->json(500);
         }
     }
+
+    /*
+     * crear vehiculos para los clientes
+     * */
+    public function storeVehicle(Request $request)
+    {
+        try {
+
+            $vehicle = new ClientVehicle();
+
+            $vehicle->id_client = $request->idClient;
+            $vehicle->id_type = $request->type;
+            $vehicle->code = $request->code;
+
+            $vehicle->save();
+
+            return response()->json(['status' => 200, 'vehicle' => $vehicle], 200);
+        } catch(\Exception $e) {
+            return response()->json(500);
+        }
+    }
+
+    /*
+     * eliminar vehiculos de los clientes
+     * */
+    public function destroyVehicle(Request $request)
+    {
+        try {
+
+            $vehicle = ClientVehicle::find($request->id);
+            if(!$vehicle === null) return response()->json(['status' => 460], 200);
+
+            try {
+                $vehicle->delete();
+                return response()->json(['status' => 200], 200);
+            } catch (\Exception $e){
+                return response()->json(['status' => 470], 200);
+            }
+        } catch(\Exception $e) {
+            return response()->json(500);
+        }
+    }
+
+    /*
+     * eliminar clientes
+     * */
+    public function destroyClient(Request $request)
+    {
+        try {
+
+            $client = Client::find($request->id);
+            if(!$client === null) return response()->json(['status' => 460], 200);
+
+            try {
+                $client->delete();
+                return response()->json(['status' => 200], 200);
+            } catch (\Exception $e){
+                return response()->json(['status' => 470], 200);
+            }
+        } catch(\Exception $e) {
+            return response()->json(500);
+        }
+    }
 }
