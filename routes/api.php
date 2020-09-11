@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TypeVehiclesController;
 use App\Http\Controllers\ParkingLotController;
 use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\ReportsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -49,5 +50,17 @@ Route::group([
     Route::post('/destroy', [ClientsController::class, 'destroyClient']);
     Route::post('/vehicles', [ClientsController::class, 'storeVehicle']);
     Route::post('/vehicles/destroy', [ClientsController::class, 'destroyVehicle']);
+
+});
+
+// rutas para repotes
+Route::group([
+    'prefix' => 'reports'
+], function() {
+
+    Route::post('/most-used-parking', [ReportsController::class, 'mostUsedParking']);
+    Route::post('/entry-and-exit-transactions', [ReportsController::class, 'entryAndExitTransactions']);
+    Route::post('/number-of-vehicles-entered', [ReportsController::class, 'numberOfVehiclesEntered']);
+    Route::post('/amount-obtained-per-day', [ReportsController::class, 'amountObtainedPerDay']);
 
 });

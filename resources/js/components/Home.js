@@ -8,7 +8,7 @@ import {AxiosPOST, AxiosGET} from '../services/Axios';
 // componentes
 import Loading from './Loading';
 
-const Settings = props => {
+const Home = props => {
 
     const [loading, setloading] = useState(false);
     const [typeVechicles, setTypeVechicles] = useState([]);
@@ -375,4 +375,4 @@ const ModalBreakFreeToSpacesParkingLot = props => {
     )
 };
 
-export default Settings;
+export default Home;
