@@ -13,7 +13,7 @@ class Index extends Component {
         return (
             <BrowserRouter>
                 <Header />
-                <div className="container p-4">
+                <div className="p-4">
                     <Switch>
                         <Route exact path='/' component={Home}/>
                         <Route path='/clients' component={Clients}/>

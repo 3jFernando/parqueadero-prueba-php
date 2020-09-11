@@ -9,7 +9,7 @@ const Clients = props => {
     const [active, setActive] = useState(1);
 
     return (
-        <Fragment>
+        <div className="container">
             <ul className="nav nav-pills">
                 <li className="nav-item">
                     <span className={active === 1 ? "nav-link active" : "nav-link"} onClick={() => setActive(1)}>Nuevo cliente</span>
@@ -36,7 +36,7 @@ const Clients = props => {
 
             </div>
 
-        </Fragment>
+        </div>
     );
 };
 
