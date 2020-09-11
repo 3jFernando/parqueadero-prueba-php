@@ -34,7 +34,8 @@ Route::group([
     'prefix' => 'parking-lot'
 ], function() {
 
-    Route::post('/space/change-state', [ParkingLotController::class, 'changeStateSpaceToParkingLot']);
+    Route::post('/transaction', [ParkingLotController::class, 'storeTransaction']);
+    Route::post('/transaction/breakfree', [ParkingLotController::class, 'breakFreeTransaction']);
 
 });
 

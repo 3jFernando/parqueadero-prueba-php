@@ -89,7 +89,7 @@ const History = props => {
             }
             <NewVehicle setModalNewVehicule={setModalNewVehicule} modalNewVehicule={modalNewVehicule}
                         typeVechicles={typeVechicles} clientActived={clientActived}/>
-            <div className="row">
+            <div className="row p-3">
                 {
                     clients.map(x => (
                         <div className="col-12 item-vehicle-to-client">

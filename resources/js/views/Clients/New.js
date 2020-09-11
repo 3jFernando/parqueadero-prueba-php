@@ -35,7 +35,8 @@ const New = props => {
     };
 
     return (
-        <Fragment>
+        <div className="card">
+        <div className="card-body">
             <form onSubmit={e => create(e)}>
                 <div className="form-group">
                     <label htmlFor="">Nombre copleto</label><br/>
@@ -55,7 +56,8 @@ const New = props => {
                     </button>
                 </div>
             </form>
-        </Fragment>
+        </div>
+        </div>
     );
 };
 

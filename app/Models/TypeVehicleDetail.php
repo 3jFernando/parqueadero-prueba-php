@@ -11,7 +11,7 @@ class TypeVehicleDetail extends Model
 
     public $timestamps = false;
 
-    protected $table = "type_vehicle_details";
+    protected $table = "types_vehicles_details";
 
     protected $fillable = [
         'id',
