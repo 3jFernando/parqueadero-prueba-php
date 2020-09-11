@@ -15,7 +15,16 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+
+            $table->unsignedBigInteger('id_client');
+
+            $table->dateTime('date_start');
+            $table->dateTime('date_end')->nullable();
+            $table->float('total', 24, 2)->default(0);
+            $table->integer('state')->default(0);
+            $table->string('time')->nullable();
+
+            $table->foreign('id_client')->references('id')->on('clients');
         });
     }
 

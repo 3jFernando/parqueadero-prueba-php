@@ -13,7 +13,7 @@ class CreateVehiclesTable extends Migration
      */
     public function up()
     {
-        Schema::create('type_vehicles', function (Blueprint $table) {
+        Schema::create('types_vehicles', function (Blueprint $table) {
             $table->id();
 
             $table->string('type');
@@ -29,6 +29,6 @@ class CreateVehiclesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('type_vehicles');
+        Schema::dropIfExists('types_vehicles');
     }
 }

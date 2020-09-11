@@ -26,15 +26,14 @@ const Clients = props => {
                 </div>
             </div>
             <br/>
-            <div className="card">
-                <div className="card-body">
-                    {
-                        active === 1 ?
-                            <New />
-                            :
-                            <History/>
-                    }
-                </div>
+            <div>
+                {
+                    active === 1 ?
+                        <New/>
+                        :
+                        <History/>
+                }
+
             </div>
 
         </Fragment>

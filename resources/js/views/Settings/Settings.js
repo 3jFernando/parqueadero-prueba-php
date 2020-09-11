@@ -87,7 +87,7 @@ const Settings = props => {
         <Fragment>
 
             <div className="card card-body">
-                <h2>Configurar vehiculos</h2>
+                <h2>Configurar estacionamientos</h2>
             </div>
 
             <br/>
@@ -97,11 +97,11 @@ const Settings = props => {
                 <form  onSubmit={(e) => create(e)}>
                     <div className="form-group">
                         <label htmlFor="">Tipo</label><br/>
-                        <input type="text" autoFocus required className="form-control" value={type} onChange={text => settype(text.target.value)} placeholder="tipo de vehiculo"/>
+                        <input type="text" autoFocus required className="form-control" value={type} onChange={text => settype(text.target.value)} placeholder="tipo"/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="">Cantidad (espacios)</label><br/>
-                        <input type="number" required className="form-control" value={cant} onChange={text => setcant(text.target.value)} placeholder="Cantidad (espacios) para vehiculos"/>
+                        <input type="number" required className="form-control" value={cant} onChange={text => setcant(text.target.value)} placeholder="Cantidad (espacios), estacionamientos"/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="">Tarifa por minuto</label><br/>

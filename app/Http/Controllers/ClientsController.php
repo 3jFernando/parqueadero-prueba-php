@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\ClientVehicle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClientsController extends Controller
 {
@@ -19,8 +20,8 @@ class ClientsController extends Controller
 
         foreach ($clientsData as $client) {
 
-            $vehicles = ClientVehicle::select('t.type', 't.rate', 'client_vehicles.*')
-                    ->join('type_vehicles as t', 't.id', '=', 'client_vehicles.id_type')
+            $vehicles = ClientVehicle::select('t.type', 't.rate', 'clients_vehicles.*')
+                    ->join('types_vehicles as t', 't.id', '=', 'clients_vehicles.id_type')
                     ->where('id_client', $client->id)->get() ?? [];
             $client->vehicles = $vehicles;
 
@@ -51,7 +52,7 @@ class ClientsController extends Controller
 
             return response()->json(['status' => 200, 'client' => $client], 200);
         } catch(\Exception $e) {
-            return response()->json(500);
+            return response()->json([],500);
         }
     }
 
@@ -72,7 +73,7 @@ class ClientsController extends Controller
 
             return response()->json(['status' => 200, 'vehicle' => $vehicle], 200);
         } catch(\Exception $e) {
-            return response()->json(500);
+            return response()->json([],500);
         }
     }
 
@@ -81,6 +82,7 @@ class ClientsController extends Controller
      * */
     public function destroyVehicle(Request $request)
     {
+        DB::beginTransaction();
         try {
 
             $vehicle = ClientVehicle::find($request->id);
@@ -88,12 +90,15 @@ class ClientsController extends Controller
 
             try {
                 $vehicle->delete();
+                DB::commit();
                 return response()->json(['status' => 200], 200);
             } catch (\Exception $e){
+                DB::rollBack();
                 return response()->json(['status' => 470], 200);
             }
         } catch(\Exception $e) {
-            return response()->json(500);
+            DB::rollBack();
+            return response()->json([],500);
         }
     }
 
@@ -102,6 +107,7 @@ class ClientsController extends Controller
      * */
     public function destroyClient(Request $request)
     {
+        DB::beginTransaction();
         try {
 
             $client = Client::find($request->id);
@@ -109,12 +115,15 @@ class ClientsController extends Controller
 
             try {
                 $client->delete();
+                DB::commit();
                 return response()->json(['status' => 200], 200);
             } catch (\Exception $e){
+                DB::rollBack();
                 return response()->json(['status' => 470], 200);
             }
         } catch(\Exception $e) {
-            return response()->json(500);
+            DB::rollBack();
+            return response()->json([],500);
         }
     }
 }

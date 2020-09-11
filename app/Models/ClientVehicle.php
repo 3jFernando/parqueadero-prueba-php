@@ -11,7 +11,7 @@ class ClientVehicle extends Model
 
     public $timestamps = false;
 
-    protected $table = "client_vehicles";
+    protected $table = "clients_vehicles";
 
     protected $fillable = [
         'id',

@@ -13,7 +13,7 @@ class CreateClientVehiclesTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_vehicles', function (Blueprint $table) {
+        Schema::create('clients_vehicles', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedBigInteger('id_client');
@@ -22,7 +22,7 @@ class CreateClientVehiclesTable extends Migration
             $table->string('code');
 
             $table->foreign('id_client')->references('id')->on('clients');
-            $table->foreign('id_type')->references('id')->on('type_vehicles');
+            $table->foreign('id_type')->references('id')->on('types_vehicles');
         });
     }
 
@@ -33,6 +33,6 @@ class CreateClientVehiclesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('client_vehicles');
+        Schema::dropIfExists('clients_vehicles');
     }
 }
