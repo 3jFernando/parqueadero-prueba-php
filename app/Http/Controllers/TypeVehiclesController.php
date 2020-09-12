@@ -35,7 +35,8 @@ class TypeVehiclesController extends Controller
                     ->join('clients as c', 'c.id', '=', 'transactions.id_client')
                     ->join('transactions_details as td', 'td.id_transaction', '=', 'transactions.id')
                     ->join('clients_vehicles as v', 'v.id', '=', 'td.id_vehicle')
-                    ->where('td.parkinglot', $item->id)->first();
+                    ->where('td.parkinglot', $item->id)
+                    ->where('transactions.state', 0)->first();
                 $item->transaction = $transaction;
 
                 array_push($details, $item);
@@ -70,6 +71,12 @@ class TypeVehiclesController extends Controller
                 $type->type = $request->type;
                 $type->cant = $request->cant;
 
+            }
+
+            $type->rate = $request->rate;
+            $type->save();
+
+            if(!$request->editing) {
                 // crear detalles
                 for ($i = 1; $i <= $type->cant; $i++) {
                     TypeVehicleDetail::insert([
@@ -78,11 +85,7 @@ class TypeVehiclesController extends Controller
                         'state' => 0
                     ]);
                 }
-
             }
-
-            $type->rate = $request->rate;
-            $type->save();
 
             DB::commit();
             return response()->json(['status' => 200, 'type' => $type], 200);
