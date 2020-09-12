@@ -8,7 +8,9 @@ import Loading from '../../components/Loading';
 
 const Settings = props => {
     const [loading, setloading] = useState(false);
+    const [editing, setediting] = useState(false);
     const [creating, setcreating] = useState('Crear tipo');
+    const [itemEditingID, setitemEditingID] = useState(null);
     const [typeVechicles, setTypeVechicles] = useState([]);
     const [type, settype] = useState('');
     const [cant, setcant] = useState(1);
@@ -33,7 +35,7 @@ const Settings = props => {
 
         setcreating("Creando, espera...");
         AxiosPOST('settings/vehicles', {
-            type, cant, rate
+            type, cant, rate, editing, itemEditingID
         }, callbackCreate);
     };
     const callbackCreate = (status, response) => {
@@ -44,16 +46,42 @@ const Settings = props => {
                 setcant(1);
                 setrate(0);
 
-                const _types = [...typeVechicles, response.type];
-                setTypeVechicles(_types);
+                const _types = editing ? [...typeVechicles.filter(x => x.id !== response.type.id), response.type] : [...typeVechicles, response.type];
 
-                alert("Tipo de vehiculo creado con exito.");
+                setTypeVechicles(_types);
+                cancelEdit();
+
+                alert(editing ? "Cambios guardados con exito." : "Item creado con exito.");
+
             } else if (response.status === 460) {
-                alert("El tipo de vehiclo ya existe.");
+                alert("El tipo ingresado ya exite.");
             }
         }
 
         if (status === 1000) setcreating('Crear tipo');
+    };
+
+    // editar tipo
+    const edit = item => {
+        setediting(true);
+        setcreating('Guardar cambios');
+
+        setitemEditingID(item.id);
+        settype(item.type);
+        setcant(item.cant);
+        setrate(item.rate);
+
+    };
+
+    // cancelar editar tipo
+    const cancelEdit = () => {
+        setediting(false);
+        setcreating('Crear tipo');
+
+        settype('');
+        setcant(1);
+        setrate(0);
+
     };
 
     // eliminar tipo
@@ -74,9 +102,9 @@ const Settings = props => {
                 const _types = typeVechicles.filter(x => x.id !== response.id);
                 setTypeVechicles(_types);
 
-                alert("Tipo de vehiculo eliminado con exito.");
+                alert("Tipo eliminado con exito.");
             } else if (response.status === 460) {
-                alert("El tipo de vehiclo no existe.");
+                alert("El tipo no existe.");
             }
         }
 
@@ -94,16 +122,20 @@ const Settings = props => {
 
             {/* agregar tipos de vehiculos */}
             <div className="card card-body">
+                <div className="alert alert-info" style={editing ? {display: 'block'} : {display: 'none'}}>
+                    <span>Solo es permitido modificar la <b>Tarifa por minuto</b></span>
+                </div>
                 <form onSubmit={(e) => create(e)}>
                     <div className="row">
                         <div className="form-group col-lg-4 col-md-4 col-ms-12">
                             <label htmlFor="">Tipo</label><br/>
-                            <input type="text" autoFocus required className="form-control" value={type}
+                            <input type="text" autoFocus required disabled={editing} className="form-control"
+                                   value={type}
                                    onChange={text => settype(text.target.value)} placeholder="tipo"/>
                         </div>
                         <div className="form-group col-lg-4 col-md-4 col-ms-12">
                             <label htmlFor="">Cantidad (espacios)</label><br/>
-                            <input type="number" required className="form-control" value={cant}
+                            <input type="number" required disabled={editing} className="form-control" value={cant}
                                    onChange={text => setcant(text.target.value)}
                                    placeholder="Cantidad (espacios), estacionamientos"/>
                         </div>
@@ -113,10 +145,19 @@ const Settings = props => {
                                    onChange={text => setrate(text.target.value)} placeholder="Tarifa por minuto"/>
                         </div>
                     </div>
-                    <button type="submit" className="btn btn-sm btn-info text-white">
-                        {creating}
-                        <span className="fa fa-plus ml-2 text-white"/>
-                    </button>
+                    <div className="d-flex">
+                        <button type="submit" className="btn btn-sm btn-info text-white">
+                            {creating}
+                            <span className="fa fa-plus ml-2 text-white"/>
+                        </button>
+                        <button type="button"
+                                className="btn btn-sm btn-light ml-2"
+                                style={editing ? {display: 'block'} : {display: 'none'}}
+                                onClick={() => cancelEdit()}>
+                            Cancelar
+                            <span className="fa fa-cancel-circle ml-2"/>
+                        </button>
+                    </div>
                 </form>
 
             </div>
@@ -149,7 +190,10 @@ const Settings = props => {
                                     <td>{x.cant}</td>
                                     <td>{x.rate}</td>
                                     <td>
-                                        <button className="btn btn-danger btn-sm" onClick={() => destroy(x.id)}>
+                                        <button className="btn btn-light btn-sm" onClick={() => edit(x)}>
+                                            <span className="fa fa-edit text-info"/>
+                                        </button>
+                                        <button className="btn btn-danger btn-sm ml-2" onClick={() => destroy(x.id)}>
                                             <span className="fa fa-trash"/>
                                         </button>
                                     </td>

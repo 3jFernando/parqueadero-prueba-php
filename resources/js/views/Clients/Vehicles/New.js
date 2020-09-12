@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {AxiosPOST} from "../../../services/Axios";
 
 const New = props => {
@@ -12,14 +12,28 @@ const New = props => {
 
         e.preventDefault();
 
+        let idClient = props.clientActived;
+        if(props.hasOwnProperty('createFast')) idClient = props.client;
+
         setCreating("Creando vehiculo, espera...");
         AxiosPOST('clients/vehicles', {
-            type, code, idClient: props.clientActived
+            type, code, idClient
         }, callbackCreate);
     };
     const callbackCreate = (status, response) => {
         if (status === 200) {
-            window.location.reload();
+
+            if(props.hasOwnProperty('createFast')) {
+                props.loadClients();
+                props.setModalNewVehicule('hide');
+                props.setClient('');
+                setTimeOut(() => {
+                    props.setClient(props.client)
+                }, 500);
+            } else {
+                window.location.reload();
+            }
+
             alert("Vehiculo creado con exito.");
         }
 

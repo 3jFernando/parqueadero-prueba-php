@@ -25,10 +25,14 @@ class ParkingLotController extends Controller
         try {
 
             // validar la zona de parqueo
-            $space = TypeVehicleDetail::select('t.rate', 'types_vehicles_details.*')
-                ->join('types_vehicles as t', 't.id', '=', 'types_vehicles_details.id_type_vehicle')
-                ->where('types_vehicles_details.id', $request->idSpace)
-                ->first();
+            $spaceData = TypeVehicleDetail::select('t.rate', 'types_vehicles_details.*')
+                ->join('types_vehicles as t', 't.id', '=', 'types_vehicles_details.id_type_vehicle');
+
+            if($request->useParkingLotRandom) { // parqueadero aletorio
+                $space = $spaceData->where('t.id', $request->typeVehicle)->where('state', 0)->first();
+            } else { // espacio seleciconado por el usuario
+                $space = $spaceData->where('types_vehicles_details.id', $request->idSpace)->first();
+            }
             if($space === null) return response()->json(['status' => 460], 200);
 
             // validar el cliente

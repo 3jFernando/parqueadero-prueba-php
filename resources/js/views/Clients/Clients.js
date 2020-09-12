@@ -29,7 +29,7 @@ const Clients = props => {
             <div>
                 {
                     active === 1 ?
-                        <New/>
+                        <New />
                         :
                         <History/>
                 }

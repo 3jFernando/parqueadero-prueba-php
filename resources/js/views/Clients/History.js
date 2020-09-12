@@ -40,18 +40,18 @@ const History = props => {
     // eliminar vehiculos de un cliente
     const deleteVehicleClient = vehicle => {
         const cDelete = confirm(`¿seguro que deseas elimar el Vehiculo con placas/serial ${vehicle.code}?`);
-        if(!cDelete) return false;
+        if (!cDelete) return false;
 
         setloading(true);
         AxiosPOST('clients/vehicles/destroy', {id: vehicle.id}, callbackDeleteVehicleClient);
     };
     const callbackDeleteVehicleClient = (status, response) => {
         if (status === 200) {
-            if(response.status === 200) {
+            if (response.status === 200) {
                 loadClients();
-            } else if(response.status === 460) {
+            } else if (response.status === 460) {
                 alert("El Vehiculo esta presentando problemas");
-            } else if(response.status === 200) {
+            } else if (response.status === 200) {
                 alert("El Vehiculo ya ha sido usado para funciones del sistema.\n\nNo es posible eliminar.");
             }
         }
@@ -62,18 +62,18 @@ const History = props => {
     // eliminar  un cliente
     const deleteClient = _cli => {
         const cDelete = confirm(`¿seguro que deseas elimar Cliente ${_cli.name}?`);
-        if(!cDelete) return false;
+        if (!cDelete) return false;
 
         setloading(true);
         AxiosPOST('clients/destroy', {id: _cli.id}, callbackDeleteClient);
     };
     const callbackDeleteClient = (status, response) => {
         if (status === 200) {
-            if(response.status === 200) {
+            if (response.status === 200) {
                 loadClients();
-            } else if(response.status === 460) {
+            } else if (response.status === 460) {
                 alert("El Cliente esta presentando problemas");
-            } else if(response.status === 200) {
+            } else if (response.status === 200) {
                 alert("El Cliente ya ha sido usado para funciones del sistema.\n\nNo es posible eliminar.");
             }
         }
@@ -87,15 +87,21 @@ const History = props => {
             {
                 loading && <Loading/>
             }
-            <NewVehicle setModalNewVehicule={setModalNewVehicule} modalNewVehicule={modalNewVehicule}
-                        typeVechicles={typeVechicles} clientActived={clientActived}/>
+            <NewVehicle
+                setModalNewVehicule={setModalNewVehicule}
+                modalNewVehicule={modalNewVehicule}
+                typeVechicles={typeVechicles}
+                clientActived={clientActived}
+                setclientActived={setclientActived}
+            />
             <div className="row p-3">
                 {
                     clients.map(x => (
                         <div className="col-12 item-vehicle-to-client">
 
                             <div className="d-flex justify-content-start align-items-center">
-                                <button className="btn btn-sm btn-danger text-white mr-2" onClick={() => deleteClient(x)}>
+                                <button className="btn btn-sm btn-danger text-white mr-2"
+                                        onClick={() => deleteClient(x)}>
                                     <span className="fa fa-trash text-white"/>
                                 </button>
                                 <div style={{width: '90%'}}>
@@ -132,7 +138,8 @@ const History = props => {
                                             <td>{v.code}</td>
                                             <td>{v.type}</td>
                                             <td>
-                                                <button className="btn btn-sm btn-danger" onClick={() => deleteVehicleClient(v)}>
+                                                <button className="btn btn-sm btn-danger"
+                                                        onClick={() => deleteVehicleClient(v)}>
                                                     <span className="fa fa-trash text-white"/>
                                                 </button>
                                             </td>
