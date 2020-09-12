@@ -26,6 +26,11 @@ const New = props => {
                 setnumber(1);
 
                 alert("Cliente creado con exito.");
+                if(props.hasOwnProperty('createFast')) {
+                    props.loadClients();
+                    props.setmodalCreateClientsFast('hide');
+                }
+
             } else if(response.status === 460) {
                 alert("El número de identificación ingresado ya existe.");
             }

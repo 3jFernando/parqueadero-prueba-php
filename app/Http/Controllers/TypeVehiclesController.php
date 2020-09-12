@@ -57,22 +57,32 @@ class TypeVehiclesController extends Controller
         DB::beginTransaction();
         try {
 
-            $type = new TypeVehicle();
+            if($request->editing) {
+                $type = TypeVehicle::find($request->itemEditingID);
+            } else {
 
-            $type->type = $request->type;
-            $type->cant = $request->cant;
-            $type->rate = $request->rate;
+                // validar que el tipo no exista
+                $validTypeExist = TypeVehicle::where('type', $request->type)->first();
+                if($validTypeExist !== null) return response()->json(['status' => 460], 200);
 
-            $type->save();
+                $type = new TypeVehicle();
 
-            // crear detalles
-            for ($i = 1; $i <= $type->cant; $i++) {
-                TypeVehicleDetail::insert([
-                    'id_type_vehicle' => $type->id,
-                    'code' => $i,
-                    'state' => 0
-                ]);
+                $type->type = $request->type;
+                $type->cant = $request->cant;
+
+                // crear detalles
+                for ($i = 1; $i <= $type->cant; $i++) {
+                    TypeVehicleDetail::insert([
+                        'id_type_vehicle' => $type->id,
+                        'code' => $i,
+                        'state' => 0
+                    ]);
+                }
+
             }
+
+            $type->rate = $request->rate;
+            $type->save();
 
             DB::commit();
             return response()->json(['status' => 200, 'type' => $type], 200);

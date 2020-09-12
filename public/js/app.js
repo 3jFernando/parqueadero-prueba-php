@@ -91238,6 +91238,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment_dist_moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment/dist/moment */ "./node_modules/moment/dist/moment.js");
 /* harmony import */ var _services_Axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/Axios */ "./resources/js/services/Axios.js");
 /* harmony import */ var _Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Loading */ "./resources/js/components/Loading.js");
+/* harmony import */ var _views_Clients_New__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../views/Clients/New */ "./resources/js/views/Clients/New.js");
+/* harmony import */ var _views_Clients_Vehicles_New__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../views/Clients/Vehicles/New */ "./resources/js/views/Clients/Vehicles/New.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -91257,6 +91259,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
+
 var Home = function Home(props) {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -91273,30 +91277,35 @@ var Home = function Home(props) {
       modalParking = _useState6[0],
       setmodalParking = _useState6[1];
 
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('hide'),
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState8 = _slicedToArray(_useState7, 2),
-      modalBreakFreeParkingLot = _useState8[0],
-      setmodalBreakFreeParkingLot = _useState8[1];
+      useParkingLotRandom = _useState8[0],
+      setUseParkingLotRandom = _useState8[1];
 
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('hide'),
       _useState10 = _slicedToArray(_useState9, 2),
-      parkingLot0 = _useState10[0],
-      setparkingLot0 = _useState10[1];
+      modalBreakFreeParkingLot = _useState10[0],
+      setmodalBreakFreeParkingLot = _useState10[1];
 
   var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
       _useState12 = _slicedToArray(_useState11, 2),
-      parkingLot1 = _useState12[0],
-      setparkingLot1 = _useState12[1];
+      parkingLot0 = _useState12[0],
+      setparkingLot0 = _useState12[1];
 
-  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
       _useState14 = _slicedToArray(_useState13, 2),
-      clients = _useState14[0],
-      setclients = _useState14[1];
+      parkingLot1 = _useState14[0],
+      setparkingLot1 = _useState14[1];
+
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState16 = _slicedToArray(_useState15, 2),
+      clients = _useState16[0],
+      setclients = _useState16[1];
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     setloading(true);
     loadParkingLot();
-    Object(_services_Axios__WEBPACK_IMPORTED_MODULE_2__["AxiosGET"])('clients', callbackLoadClients);
+    loadClients();
   }, []); // cargar vahiculos - datos del estacionamiento
 
   var loadParkingLot = function loadParkingLot() {
@@ -91310,27 +91319,32 @@ var Home = function Home(props) {
   }; // cargar clientes
 
 
+  var loadClients = function loadClients() {
+    Object(_services_Axios__WEBPACK_IMPORTED_MODULE_2__["AxiosGET"])('clients', callbackLoadClients);
+  };
+
   var callbackLoadClients = function callbackLoadClients(status, response) {
     if (status === 200) setclients(response.clients);
     if (status === 1000) setloading(false);
   }; // hacer uso de un espacio de uno de los items del parqueadero
 
 
-  var useSpace = function useSpace(space, type) {
-    // ocupar estacionamiento
-    if (space.state === 0) {
-      setparkingLot0({
-        space: space,
-        type: type
-      });
-      setmodalParking('show');
-    } else {
-      // liberar estacionamiento
+  var useSpace = function useSpace(space, type, random) {
+    setUseParkingLotRandom(random); // liberar estacionamiento
+
+    if (space.state === 1) {
       setparkingLot1({
         space: space,
         type: type
       });
       setmodalBreakFreeParkingLot('show');
+    } else {
+      // ocupar estacionamiento
+      setparkingLot0({
+        space: space,
+        type: type
+      });
+      setmodalParking('show');
     }
   };
 
@@ -91351,15 +91365,28 @@ var Home = function Home(props) {
     modalParking: modalParking,
     setmodalParking: setmodalParking,
     clients: clients,
-    loadParkingLot: loadParkingLot
+    loadParkingLot: loadParkingLot,
+    loadClients: loadClients,
+    typeVechicles: typeVechicles,
+    useParkingLotRandom: useParkingLotRandom
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ModalBreakFreeToSpacesParkingLot, {
     data: parkingLot1,
     loadParkingLot: loadParkingLot,
     modalBreakFreeParkingLot: modalBreakFreeParkingLot,
     setmodalBreakFreeParkingLot: setmodalBreakFreeParkingLot
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "card card-body"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Estacionamiento")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-body d-flex justify-content-between align-items-center"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Estacionamiento")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "button",
+    onClick: function onClick() {
+      return useSpace('', '', true);
+    },
+    className: "btn btn-sm btn-info text-white"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "fa fa-car text-white mr-2"
+  }), " Ingresar vehiculo"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card-body"
@@ -91394,33 +91421,59 @@ var Items = function Items(_ref) {
     id: "item-space-".concat(data.id, "-").concat(data.code),
     className: data.state === 0 ? "space-item col-2 space-item-free" : "space-item col-2",
     onClick: function onClick() {
-      return useSpace(data, type);
+      return useSpace(data, type, false);
     }
-  });
+  }, data.transaction !== null ? data.transaction.code : '');
 }; // modal usar parquedero
 
 
 var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props) {
-  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
-      _useState16 = _slicedToArray(_useState15, 2),
-      vehicles = _useState16[0],
-      setvehicles = _useState16[1];
-
   var _useState17 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState18 = _slicedToArray(_useState17, 2),
-      client = _useState18[0],
-      setClient = _useState18[1];
+      typeVehicle = _useState18[0],
+      settypeVehicle = _useState18[1];
 
   var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState20 = _slicedToArray(_useState19, 2),
-      vehicle = _useState20[0],
-      setvehicle = _useState20[1];
+      idSpace = _useState20[0],
+      setidSpace = _useState20[1];
 
-  var _useState21 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('Ocupar estacionamiento'),
+  var _useState21 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState22 = _slicedToArray(_useState21, 2),
-      creatingTransaction = _useState22[0],
-      setcreatingTransaction = _useState22[1]; // cambiar cliente seleccioando
+      vehicles = _useState22[0],
+      setvehicles = _useState22[1];
 
+  var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState24 = _slicedToArray(_useState23, 2),
+      client = _useState24[0],
+      setClient = _useState24[1];
+
+  var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+      _useState26 = _slicedToArray(_useState25, 2),
+      vehicle = _useState26[0],
+      setvehicle = _useState26[1];
+
+  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('Ocupar estacionamiento'),
+      _useState28 = _slicedToArray(_useState27, 2),
+      creatingTransaction = _useState28[0],
+      setcreatingTransaction = _useState28[1];
+
+  var _useState29 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('hide'),
+      _useState30 = _slicedToArray(_useState29, 2),
+      modalCreateClientsFast = _useState30[0],
+      setmodalCreateClientsFast = _useState30[1];
+
+  var _useState31 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('hide'),
+      _useState32 = _slicedToArray(_useState31, 2),
+      modalCreateVehiclesToClientsFast = _useState32[0],
+      setmodalCreateVehiclesToClientsFast = _useState32[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (props.data !== null) {
+      settypeVehicle(props.data.type.id);
+      setidSpace(props.data.space.id);
+    }
+  }); // cambiar cliente seleccioando
 
   var changeClient = function changeClient(value) {
     setClient(value);
@@ -91435,20 +91488,32 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
 
   var storeTransaction = function storeTransaction(e) {
     e.preventDefault();
+    var type = typeVehicle;
+    var space = idSpace;
+
+    if (props.useParkingLotRandom) {
+      type = document.getElementById('id-type-vehicule').value;
+      space = '';
+    }
+
     setcreatingTransaction("Creando transacción, espera...");
     Object(_services_Axios__WEBPACK_IMPORTED_MODULE_2__["AxiosPOST"])('parking-lot/transaction', {
       client: client,
       vehicle: vehicle,
-      idSpace: props.data.space.id
+      idSpace: space,
+      useParkingLotRandom: props.useParkingLotRandom,
+      typeVehicle: type
     }, callbackCreate);
   };
 
   var callbackCreate = function callbackCreate(status, response) {
     if (status === 200) {
       if (response.status === 200) {
-        alert("Proceso realizado con exito.");
+        setClient('');
+        setvehicle('');
         props.loadParkingLot();
         props.setmodalParking('hide');
+        alert("Proceso realizado con exito.");
       } else if (response.status === 460) {
         alert("El espacio ".concat(props.data.space.code, " del parqueadero de ").concat(props.data.type.type, ", esta presentando problemas."));
       } else if (response.status === 470) {
@@ -91459,6 +91524,27 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
     }
 
     if (status === 1000) setcreatingTransaction('Ocupar estacionamiento');
+  };
+  /*
+  * Crear clientes rapidos
+  * */
+
+
+  var openModalCreateClientFast = function openModalCreateClientFast(data) {
+    setmodalCreateClientsFast('show');
+  };
+  /*
+  * Crear vehiculos para los clientes rapidos
+  * */
+
+
+  var openModalCreateVehicleToFast = function openModalCreateVehicleToFast(data) {
+    if (client === null || client === '' || client === undefined) {
+      alert("Primero debes seleccionar un Cliente.\n\n* Recuerda que el Vehiculo debe estar relacionado a un cliente");
+      return false;
+    }
+
+    setmodalCreateVehiclesToClientsFast('show');
   };
 
   return props.data !== null && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -91483,7 +91569,9 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
     className: "modal-title",
     id: "staticBackdropLabel"
-  }, props.data.type.type, " - Espacio ", props.data.space.code, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  }, "Usar estacionamiento ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "fa fa-car text-info ml-2"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     onClick: function onClick() {
       return props.setmodalParking('hide');
@@ -91495,7 +91583,18 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
     "aria-hidden": "true"
   }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "modal-body"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ModalCreateClientFast, {
+    modalCreateClientsFast: modalCreateClientsFast,
+    setmodalCreateClientsFast: setmodalCreateClientsFast,
+    loadClients: props.loadClients
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ModalCreateVehiclesToClientFast, {
+    modalCreateVehiclesToClientsFast: modalCreateVehiclesToClientsFast,
+    setmodalCreateVehiclesToClientsFast: setmodalCreateVehiclesToClientsFast,
+    loadClients: props.loadClients,
+    client: client,
+    setClient: setClient,
+    typeVechicles: props.typeVechicles
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
     onSubmit: function onSubmit(e) {
       return storeTransaction(e);
     }
@@ -91503,10 +91602,33 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
     className: "form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
     htmlFor: ""
+  }, "Estacionamiento"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "d-flex justify-content-start align-items-center"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+    className: "form-control",
+    disabled: !props.useParkingLotRandom,
+    required: true,
+    id: "id-type-vehicule",
+    value: typeVehicle,
+    onChange: function onChange(text) {
+      return settypeVehicle(text.target.value);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+    value: ""
+  }, "..."), props.typeVechicles.map(function (x) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      key: x.id,
+      value: x.id
+    }, x.type);
+  })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: ""
   }, "Cliente"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "d-flex justify-content-start align-items-center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     className: "form-control",
+    required: true,
     value: client,
     onChange: function onChange(text) {
       return changeClient(text.target.value);
@@ -91519,9 +91641,13 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
       value: x.id
     }, x.number, " - ", x.name);
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    className: "btn btn-sm btn-info ml-2"
+    type: "button",
+    className: "btn btn-sm btn-info ml-2",
+    onClick: function onClick() {
+      return openModalCreateClientFast(props.data);
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    className: "fa fa-plus text-white"
+    className: "fa fa-user-plus text-white"
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "form-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -91530,6 +91656,7 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
     className: "d-flex justify-content-start align-items-center mt-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     className: "form-control",
+    required: true,
     value: vehicle,
     onChange: function onChange(text) {
       return setvehicle(text.target.value);
@@ -91542,9 +91669,13 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
       value: x.id
     }, x.code, " - ", x.type);
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    className: "btn btn-sm btn-info ml-2"
+    type: "button",
+    className: "btn btn-sm btn-info ml-2",
+    onClick: function onClick() {
+      return openModalCreateVehicleToFast(props.data);
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    className: "fa fa-plus text-white"
+    className: "fa fa-car text-white"
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "modal-footer"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -91558,29 +91689,85 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
     type: "submit",
     className: "btn btn-sm btn-info text-white"
   }, creatingTransaction)))))));
+}; // modal crear clientes rapidos
+
+
+var ModalCreateClientFast = function ModalCreateClientFast(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal fade ".concat(props.modalCreateClientsFast),
+    style: props.modalCreateClientsFast === 'show' ? {
+      display: 'flex'
+    } : {
+      display: 'none'
+    },
+    id: "staticBackdrop",
+    "data-backdrop": "static",
+    "data-keyboard": "false",
+    tabIndex: "-1",
+    "aria-labelledby": "staticBackdropLabel",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-dialog w-100"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-content"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-header"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
+    className: "modal-title",
+    id: "staticBackdropLabel"
+  }, "Crear cliente"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "button",
+    onClick: function onClick() {
+      return props.setmodalCreateClientsFast('hide');
+    },
+    className: "close",
+    "data-dismiss": "modal",
+    "aria-label": "Close"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    "aria-hidden": "true"
+  }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-body"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_views_Clients_New__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    createFast: true,
+    loadClients: props.loadClients,
+    setmodalCreateClientsFast: props.setmodalCreateClientsFast
+  })))));
+}; // modal crear vehiculos para los clientes rapidos
+
+
+var ModalCreateVehiclesToClientFast = function ModalCreateVehiclesToClientFast(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_views_Clients_Vehicles_New__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    typeVechicles: props.typeVechicles,
+    createFast: true,
+    loadClients: props.loadClients,
+    client: props.client,
+    setClient: props.setClient,
+    modalNewVehicule: props.modalCreateVehiclesToClientsFast,
+    setModalNewVehicule: props.setmodalCreateVehiclesToClientsFast
+  });
 }; // modal liberar parquedero
 
 
 var ModalBreakFreeToSpacesParkingLot = function ModalBreakFreeToSpacesParkingLot(props) {
-  var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
-      _useState24 = _slicedToArray(_useState23, 2),
-      toDay = _useState24[0],
-      settoDay = _useState24[1];
+  var _useState33 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
+      _useState34 = _slicedToArray(_useState33, 2),
+      toDay = _useState34[0],
+      settoDay = _useState34[1];
 
-  var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
-      _useState26 = _slicedToArray(_useState25, 2),
-      time = _useState26[0],
-      setTime = _useState26[1];
+  var _useState35 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
+      _useState36 = _slicedToArray(_useState35, 2),
+      time = _useState36[0],
+      setTime = _useState36[1];
 
-  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('Liberar estacionamiento'),
-      _useState28 = _slicedToArray(_useState27, 2),
-      breakFreeParkingLot = _useState28[0],
-      setbreakFreeParkingLot = _useState28[1];
+  var _useState37 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('Liberar estacionamiento'),
+      _useState38 = _slicedToArray(_useState37, 2),
+      breakFreeParkingLot = _useState38[0],
+      setbreakFreeParkingLot = _useState38[1];
 
-  var _useState29 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
-      _useState30 = _slicedToArray(_useState29, 2),
-      totalToPay = _useState30[0],
-      settotalToPay = _useState30[1];
+  var _useState39 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState40 = _slicedToArray(_useState39, 2),
+      totalToPay = _useState40[0],
+      settotalToPay = _useState40[1];
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (props.data !== null) {
@@ -92114,7 +92301,8 @@ var History = function History(props) {
     setModalNewVehicule: setModalNewVehicule,
     modalNewVehicule: modalNewVehicule,
     typeVechicles: typeVechicles,
-    clientActived: clientActived
+    clientActived: clientActived,
+    setclientActived: setclientActived
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row p-3"
   }, clients.map(function (x) {
@@ -92227,6 +92415,11 @@ var New = function New(props) {
         setname('');
         setnumber(1);
         alert("Cliente creado con exito.");
+
+        if (props.hasOwnProperty('createFast')) {
+          props.loadClients();
+          props.setmodalCreateClientsFast('hide');
+        }
       } else if (response.status === 460) {
         alert("El número de identificación ingresado ya existe.");
       }
@@ -92333,17 +92526,29 @@ var New = function New(props) {
 
   var create = function create(e) {
     e.preventDefault();
+    var idClient = props.clientActived;
+    if (props.hasOwnProperty('createFast')) idClient = props.client;
     setCreating("Creando vehiculo, espera...");
     Object(_services_Axios__WEBPACK_IMPORTED_MODULE_1__["AxiosPOST"])('clients/vehicles', {
       type: type,
       code: code,
-      idClient: props.clientActived
+      idClient: idClient
     }, callbackCreate);
   };
 
   var callbackCreate = function callbackCreate(status, response) {
     if (status === 200) {
-      window.location.reload();
+      if (props.hasOwnProperty('createFast')) {
+        props.loadClients();
+        props.setModalNewVehicule('hide');
+        props.setClient('');
+        setTimeOut(function () {
+          props.setClient(props.client);
+        }, 500);
+      } else {
+        window.location.reload();
+      }
+
       alert("Vehiculo creado con exito.");
     }
 
@@ -92681,30 +92886,40 @@ var Settings = function Settings(props) {
       loading = _useState2[0],
       setloading = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('Crear tipo'),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState4 = _slicedToArray(_useState3, 2),
-      creating = _useState4[0],
-      setcreating = _useState4[1];
+      editing = _useState4[0],
+      setediting = _useState4[1];
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('Crear tipo'),
       _useState6 = _slicedToArray(_useState5, 2),
-      typeVechicles = _useState6[0],
-      setTypeVechicles = _useState6[1];
+      creating = _useState6[0],
+      setcreating = _useState6[1];
 
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
       _useState8 = _slicedToArray(_useState7, 2),
-      type = _useState8[0],
-      settype = _useState8[1];
+      itemEditingID = _useState8[0],
+      setitemEditingID = _useState8[1];
 
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(1),
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState10 = _slicedToArray(_useState9, 2),
-      cant = _useState10[0],
-      setcant = _useState10[1];
+      typeVechicles = _useState10[0],
+      setTypeVechicles = _useState10[1];
 
-  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(''),
       _useState12 = _slicedToArray(_useState11, 2),
-      rate = _useState12[0],
-      setrate = _useState12[1];
+      type = _useState12[0],
+      settype = _useState12[1];
+
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(1),
+      _useState14 = _slicedToArray(_useState13, 2),
+      cant = _useState14[0],
+      setcant = _useState14[1];
+
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState16 = _slicedToArray(_useState15, 2),
+      rate = _useState16[0],
+      setrate = _useState16[1];
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     setloading(true);
@@ -92723,7 +92938,9 @@ var Settings = function Settings(props) {
     Object(_services_Axios__WEBPACK_IMPORTED_MODULE_1__["AxiosPOST"])('settings/vehicles', {
       type: type,
       cant: cant,
-      rate: rate
+      rate: rate,
+      editing: editing,
+      itemEditingID: itemEditingID
     }, callbackCreate);
   };
 
@@ -92734,16 +92951,38 @@ var Settings = function Settings(props) {
         setcant(1);
         setrate(0);
 
-        var _types = [].concat(_toConsumableArray(typeVechicles), [response.type]);
+        var _types = editing ? [].concat(_toConsumableArray(typeVechicles.filter(function (x) {
+          return x.id !== response.type.id;
+        })), [response.type]) : [].concat(_toConsumableArray(typeVechicles), [response.type]);
 
         setTypeVechicles(_types);
-        alert("Tipo de vehiculo creado con exito.");
+        cancelEdit();
+        alert(editing ? "Cambios guardados con exito." : "Item creado con exito.");
       } else if (response.status === 460) {
-        alert("El tipo de vehiclo ya existe.");
+        alert("El tipo ingresado ya exite.");
       }
     }
 
     if (status === 1000) setcreating('Crear tipo');
+  }; // editar tipo
+
+
+  var edit = function edit(item) {
+    setediting(true);
+    setcreating('Guardar cambios');
+    setitemEditingID(item.id);
+    settype(item.type);
+    setcant(item.cant);
+    setrate(item.rate);
+  }; // cancelar editar tipo
+
+
+  var cancelEdit = function cancelEdit() {
+    setediting(false);
+    setcreating('Crear tipo');
+    settype('');
+    setcant(1);
+    setrate(0);
   }; // eliminar tipo
 
 
@@ -92764,9 +93003,9 @@ var Settings = function Settings(props) {
         });
 
         setTypeVechicles(_types);
-        alert("Tipo de vehiculo eliminado con exito.");
+        alert("Tipo eliminado con exito.");
       } else if (response.status === 460) {
-        alert("El tipo de vehiclo no existe.");
+        alert("El tipo no existe.");
       }
     }
 
@@ -92779,7 +93018,14 @@ var Settings = function Settings(props) {
     className: "card card-body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Configurar estacionamientos")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card card-body"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "alert alert-info",
+    style: editing ? {
+      display: 'block'
+    } : {
+      display: 'none'
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Solo es permitido modificar la ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Tarifa por minuto"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
     onSubmit: function onSubmit(e) {
       return create(e);
     }
@@ -92793,6 +93039,7 @@ var Settings = function Settings(props) {
     type: "text",
     autoFocus: true,
     required: true,
+    disabled: editing,
     className: "form-control",
     value: type,
     onChange: function onChange(text) {
@@ -92806,6 +93053,7 @@ var Settings = function Settings(props) {
   }, "Cantidad (espacios)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "number",
     required: true,
+    disabled: editing,
     className: "form-control",
     value: cant,
     onChange: function onChange(text) {
@@ -92825,12 +93073,27 @@ var Settings = function Settings(props) {
       return setrate(text.target.value);
     },
     placeholder: "Tarifa por minuto"
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "d-flex"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "submit",
     className: "btn btn-sm btn-info text-white"
   }, creating, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "fa fa-plus ml-2 text-white"
-  })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "button",
+    className: "btn btn-sm btn-light ml-2",
+    style: editing ? {
+      display: 'block'
+    } : {
+      display: 'none'
+    },
+    onClick: function onClick() {
+      return cancelEdit();
+    }
+  }, "Cancelar", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "fa fa-cancel-circle ml-2"
+  }))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "card mt-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "table-responsive card-body"
@@ -92838,7 +93101,14 @@ var Settings = function Settings(props) {
     className: "table table-hover"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "#"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Tipo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Cantidad (espacios)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Tarifa por minuto"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Eliminar"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, typeVechicles.map(function (x) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, x.id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, x.type), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, x.cant), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, x.rate), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-      className: "btn btn-danger btn-sm",
+      className: "btn btn-light btn-sm",
+      onClick: function onClick() {
+        return edit(x);
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "fa fa-edit text-info"
+    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: "btn btn-danger btn-sm ml-2",
       onClick: function onClick() {
         return destroy(x.id);
       }
