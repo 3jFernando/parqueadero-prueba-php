@@ -23,21 +23,32 @@ const New = props => {
     const callbackCreate = (status, response) => {
         if (status === 200) {
 
-            if(props.hasOwnProperty('createFast')) {
-                props.loadClients();
-                props.setModalNewVehicule('hide');
-                props.setClient('');
-                setTimeOut(() => {
-                    props.setClient(props.client)
-                }, 500);
-            } else {
-                window.location.reload();
-            }
+            if(response.status === 200) {
 
-            alert("Vehiculo creado con exito.");
+                if(props.hasOwnProperty('createFast')) {
+                    props.setvehicles([...props.vehicles, response.vehicle]);
+                    closeModal();
+                } else {
+                    window.location.reload();
+                }
+
+                alert("Vehiculo creado con exito.");
+
+            } else if(response.status === 460) {
+                alert("La Placa/Serial ingresado ya se encuentra asociado a un Vehiculo de este cliente.");
+            }
         }
 
         if (status === 1000) setCreating('Crear Vehiculo');
+    };
+
+    /*
+    * cerrar modal
+    * */
+    const closeModal = () => {
+        setType('');
+        setCode('');
+        props.setModalNewVehicule('hide');
     };
 
     return (
@@ -49,7 +60,7 @@ const New = props => {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title" id="staticBackdropLabel">Agregar Vehiculo</h5>
-                        <button type="button" onClick={() => props.setModalNewVehicule('hide')} className="close"
+                        <button type="button" onClick={() => closeModal()} className="close"
                                 data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -77,7 +88,7 @@ const New = props => {
 
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-sm btn-light" data-dismiss="modal"
-                                        onClick={() => props.setModalNewVehicule('hide')}>Cancelar
+                                        onClick={() => closeModal()}>Cancelar
                                 </button>
                                 <button
                                     type="submit"
