@@ -27,6 +27,7 @@ const New = props => {
 
                 alert("Cliente creado con exito.");
                 if(props.hasOwnProperty('createFast')) {
+                    props.setvehicles([]);
                     props.loadClients();
                     props.setmodalCreateClientsFast('hide');
                 }

@@ -6,7 +6,7 @@ export async function AxiosPOST(url, params, callback) {
         .then(response => {
             callback(200, response.data);
         })
-        .catch(e => alert("No es posible realziar la acción."))
+        .catch(e => alert("No es posible realizar la acción, para crear los datos."))
         .finally(() => callback(1000, null));
 }
 
@@ -18,7 +18,7 @@ export async function AxiosGET(url, callback) {
         .then(response => {
             callback(200, response.data);
         })
-        .catch(e => alert("No es posible realziar la acción."))
+        .catch(e => alert("No es posible realizar la acción, para cargar los datos."))
         .finally(() => callback(1000, null));
 
 }

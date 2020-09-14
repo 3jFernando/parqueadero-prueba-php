@@ -91477,8 +91477,12 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
 
   var changeClient = function changeClient(value) {
     setClient(value);
+    console.log("cliente ", value, ' typeVehicle ', typeVehicle);
+    var _type = document.getElementById('id-type-vehicule').value;
     props.clients.filter(function (x) {
-      if (x.id == value) setvehicles(x.vehicles);
+      if (x.id == value) setvehicles(x.vehicles.filter(function (v) {
+        return v.id_type == _type;
+      }));
     });
   };
   /*
@@ -91511,6 +91515,7 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
       if (response.status === 200) {
         setClient('');
         setvehicle('');
+        setvehicles([]);
         props.loadParkingLot();
         props.setmodalParking('hide');
         alert("Proceso realizado con exito.");
@@ -91546,6 +91551,19 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
 
     setmodalCreateVehiclesToClientsFast('show');
   };
+  /*
+  * cerrar modal
+  * */
+
+
+  var closeModal = function closeModal() {
+    setvehicle('');
+    setClient('');
+    setvehicles([]);
+    setidSpace('');
+    settypeVehicle('');
+    props.setmodalParking('hide');
+  };
 
   return props.data !== null && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "modal fade ".concat(props.modalParking),
@@ -91574,7 +91592,7 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     onClick: function onClick() {
-      return props.setmodalParking('hide');
+      return closeModal();
     },
     className: "close",
     "data-dismiss": "modal",
@@ -91586,14 +91604,17 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ModalCreateClientFast, {
     modalCreateClientsFast: modalCreateClientsFast,
     setmodalCreateClientsFast: setmodalCreateClientsFast,
-    loadClients: props.loadClients
+    loadClients: props.loadClients,
+    setvehicles: setvehicles
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ModalCreateVehiclesToClientFast, {
     modalCreateVehiclesToClientsFast: modalCreateVehiclesToClientsFast,
     setmodalCreateVehiclesToClientsFast: setmodalCreateVehiclesToClientsFast,
     loadClients: props.loadClients,
     client: client,
     setClient: setClient,
-    typeVechicles: props.typeVechicles
+    typeVechicles: props.typeVechicles,
+    vehicles: vehicles,
+    setvehicles: setvehicles
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
     onSubmit: function onSubmit(e) {
       return storeTransaction(e);
@@ -91667,7 +91688,7 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       key: x.id,
       value: x.id
-    }, x.code, " - ", x.type);
+    }, x.code);
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     className: "btn btn-sm btn-info ml-2",
@@ -91683,7 +91704,7 @@ var ModalActiosToSpacesParkingLot = function ModalActiosToSpacesParkingLot(props
     className: "btn btn-sm btn-light",
     "data-dismiss": "modal",
     onClick: function onClick() {
-      return props.setmodalParking('hide');
+      return closeModal();
     }
   }, "Cancelar"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "submit",
@@ -91730,7 +91751,8 @@ var ModalCreateClientFast = function ModalCreateClientFast(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_views_Clients_New__WEBPACK_IMPORTED_MODULE_4__["default"], {
     createFast: true,
     loadClients: props.loadClients,
-    setmodalCreateClientsFast: props.setmodalCreateClientsFast
+    setmodalCreateClientsFast: props.setmodalCreateClientsFast,
+    setvehicles: props.setvehicles
   })))));
 }; // modal crear vehiculos para los clientes rapidos
 
@@ -91743,7 +91765,9 @@ var ModalCreateVehiclesToClientFast = function ModalCreateVehiclesToClientFast(p
     client: props.client,
     setClient: props.setClient,
     modalNewVehicule: props.modalCreateVehiclesToClientsFast,
-    setModalNewVehicule: props.setmodalCreateVehiclesToClientsFast
+    setModalNewVehicule: props.setmodalCreateVehiclesToClientsFast,
+    vehicles: props.vehicles,
+    setvehicles: props.setvehicles
   });
 }; // modal liberar parquedero
 
@@ -92058,7 +92082,7 @@ function _AxiosPOST() {
             return axios.post("/api/".concat(url), params).then(function (response) {
               callback(200, response.data);
             })["catch"](function (e) {
-              return alert("No es posible realziar la acción.");
+              return alert("No es posible realizar la acción, para crear los datos.");
             })["finally"](function () {
               return callback(1000, null);
             });
@@ -92087,7 +92111,7 @@ function _AxiosGET() {
             return axios.get("/api/".concat(url)).then(function (response) {
               callback(200, response.data);
             })["catch"](function (e) {
-              return alert("No es posible realziar la acción.");
+              return alert("No es posible realizar la acción, para cargar los datos.");
             })["finally"](function () {
               return callback(1000, null);
             });
@@ -92417,6 +92441,7 @@ var New = function New(props) {
         alert("Cliente creado con exito.");
 
         if (props.hasOwnProperty('createFast')) {
+          props.setvehicles([]);
           props.loadClients();
           props.setmodalCreateClientsFast('hide');
         }
@@ -92492,6 +92517,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _services_Axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../services/Axios */ "./resources/js/services/Axios.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -92538,21 +92571,31 @@ var New = function New(props) {
 
   var callbackCreate = function callbackCreate(status, response) {
     if (status === 200) {
-      if (props.hasOwnProperty('createFast')) {
-        props.loadClients();
-        props.setModalNewVehicule('hide');
-        props.setClient('');
-        setTimeOut(function () {
-          props.setClient(props.client);
-        }, 500);
-      } else {
-        window.location.reload();
-      }
+      if (response.status === 200) {
+        if (props.hasOwnProperty('createFast')) {
+          props.setvehicles([].concat(_toConsumableArray(props.vehicles), [response.vehicle]));
+          closeModal();
+        } else {
+          window.location.reload();
+        }
 
-      alert("Vehiculo creado con exito.");
+        alert("Vehiculo creado con exito.");
+      } else if (response.status === 460) {
+        alert("La Placa/Serial ingresado ya se encuentra asociado a un Vehiculo de este cliente.");
+      }
     }
 
     if (status === 1000) setCreating('Crear Vehiculo');
+  };
+  /*
+  * cerrar modal
+  * */
+
+
+  var closeModal = function closeModal() {
+    setType('');
+    setCode('');
+    props.setModalNewVehicule('hide');
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -92580,7 +92623,7 @@ var New = function New(props) {
   }, "Agregar Vehiculo"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     onClick: function onClick() {
-      return props.setModalNewVehicule('hide');
+      return closeModal();
     },
     className: "close",
     "data-dismiss": "modal",
@@ -92630,7 +92673,7 @@ var New = function New(props) {
     className: "btn btn-sm btn-light",
     "data-dismiss": "modal",
     onClick: function onClick() {
-      return props.setModalNewVehicule('hide');
+      return closeModal();
     }
   }, "Cancelar"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "submit",
@@ -93140,8 +93183,8 @@ var Settings = function Settings(props) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/fernandogarcia/Server/Php/ClamonSf/parqueadero/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/fernandogarcia/Server/Php/ClamonSf/parqueadero/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/fernandogarcia/Server/ClamonSf/parqueadero/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/fernandogarcia/Server/ClamonSf/parqueadero/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

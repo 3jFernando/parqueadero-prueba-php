@@ -59,7 +59,6 @@ const Home = props => {
         } else { // ocupar estacionamiento
             setparkingLot0({space, type});
             setmodalParking('show');
-
         }
 
     };
@@ -171,6 +170,7 @@ const ModalActiosToSpacesParkingLot = props => {
     const [modalCreateVehiclesToClientsFast, setmodalCreateVehiclesToClientsFast] = useState('hide');
 
     useEffect(() => {
+
        if(props.data !== null) {
            settypeVehicle(props.data.type.id);
            setidSpace(props.data.space.id);
@@ -180,8 +180,12 @@ const ModalActiosToSpacesParkingLot = props => {
     // cambiar cliente seleccioando
     const changeClient = value => {
         setClient(value);
+
+        console.log("cliente ", value, ' typeVehicle ', typeVehicle);
+
+        const _type = document.getElementById('id-type-vehicule').value;
         props.clients.filter(x => {
-            if (x.id == value) setvehicles(x.vehicles);
+            if (x.id == value) setvehicles(x.vehicles.filter(v => v.id_type == _type));
         });
     };
 
@@ -210,6 +214,7 @@ const ModalActiosToSpacesParkingLot = props => {
 
                 setClient('');
                 setvehicle('');
+                setvehicles([]);
 
                 props.loadParkingLot();
                 props.setmodalParking('hide');
@@ -248,6 +253,18 @@ const ModalActiosToSpacesParkingLot = props => {
         setmodalCreateVehiclesToClientsFast('show');
     };
 
+    /*
+    * cerrar modal
+    * */
+    const closeModal = () => {
+        setvehicle('');
+        setClient('');
+        setvehicles([]);
+        setidSpace('');
+        settypeVehicle('');
+        props.setmodalParking('hide');
+    };
+
     return props.data !== null && (
         <div className={`modal fade ${props.modalParking}`}
              style={props.modalParking === 'show' ? {display: 'flex'} : {display: 'none'}} id="staticBackdrop"
@@ -258,7 +275,7 @@ const ModalActiosToSpacesParkingLot = props => {
                     <div className="modal-header">
                         <h5 className="modal-title" id="staticBackdropLabel">Usar estacionamiento <span
                             className="fa fa-car text-info ml-2"/></h5>
-                        <button type="button" onClick={() => props.setmodalParking('hide')} className="close"
+                        <button type="button" onClick={() => closeModal()} className="close"
                                 data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -269,6 +286,7 @@ const ModalActiosToSpacesParkingLot = props => {
                             modalCreateClientsFast={modalCreateClientsFast}
                             setmodalCreateClientsFast={setmodalCreateClientsFast}
                             loadClients={props.loadClients}
+                            setvehicles={setvehicles}
                         />
 
                         <ModalCreateVehiclesToClientFast
@@ -278,6 +296,8 @@ const ModalActiosToSpacesParkingLot = props => {
                             client={client}
                             setClient={setClient}
                             typeVechicles={props.typeVechicles}
+                            vehicles={vehicles}
+                            setvehicles={setvehicles}
                         />
 
                         <form onSubmit={e => storeTransaction(e)}>
@@ -328,7 +348,7 @@ const ModalActiosToSpacesParkingLot = props => {
                                         <option value="">...</option>
                                         {
                                             vehicles.map(x => <option key={x.id}
-                                                                      value={x.id}>{x.code} - {x.type}</option>)
+                                                                      value={x.id}>{x.code}</option>)
                                         }
                                     </select>
                                     <button type="button" className="btn btn-sm btn-info ml-2"
@@ -340,7 +360,7 @@ const ModalActiosToSpacesParkingLot = props => {
 
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-sm btn-light" data-dismiss="modal"
-                                        onClick={() => props.setmodalParking('hide')}>Cancelar
+                                        onClick={() => closeModal()}>Cancelar
                                 </button>
                                 <button type="submit"
                                         className="btn btn-sm btn-info text-white">{creatingTransaction}</button>
@@ -381,7 +401,9 @@ const ModalCreateClientFast = props => {
                         <ClientNewFast
                             createFast={true}
                             loadClients={props.loadClients}
-                            setmodalCreateClientsFast={props.setmodalCreateClientsFast}/>
+                            setmodalCreateClientsFast={props.setmodalCreateClientsFast}
+                            setvehicles={props.setvehicles}
+                        />
 
                     </div>
                 </div>
@@ -400,7 +422,10 @@ const ModalCreateVehiclesToClientFast = props => {
             client={props.client}
             setClient={props.setClient}
             modalNewVehicule={props.modalCreateVehiclesToClientsFast}
-            setModalNewVehicule={props.setmodalCreateVehiclesToClientsFast}/>
+            setModalNewVehicule={props.setmodalCreateVehiclesToClientsFast}
+            vehicles={props.vehicles}
+            setvehicles={props.setvehicles}
+        />
     );
 };
 

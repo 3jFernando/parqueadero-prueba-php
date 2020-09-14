@@ -63,6 +63,9 @@ class ClientsController extends Controller
     {
         try {
 
+            // validar que el vehiclo a ingresar no exista ya, por lo menos con la mimsa placa, para el mismo cliente
+            $valid = ClientVehicle::where('id_client', $request->idClient)->where('id_type', $request->type)->where('code', $request->code)->first();
+            if($valid !== null) return response()->json(['status' => 460], 200);
             $vehicle = new ClientVehicle();
 
             $vehicle->id_client = $request->idClient;
